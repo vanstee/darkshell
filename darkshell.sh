@@ -10,12 +10,12 @@ if ! [ -n "${FORECAST_IO_KEY}" ]; then
   exit 1
 fi
 
-location=$(curl --header "$GOOGLE_LATITUDE_OAUTH_TOKEN" https://www.googleapis.com/latitude/v1/currentLocation?granularity=best)
+location=$(curl --silent --header "$GOOGLE_LATITUDE_OAUTH_TOKEN" https://www.googleapis.com/latitude/v1/currentLocation?granularity=best)
 latitude=$(echo $location | cut -d ',' -f 3 | cut -d ':' -f 2)
 longitude=$(echo $location | cut -d ',' -f 4 | cut -d ':' -f 2)
 
 current_time=$(date +"%s")
-forecast=$(curl https://api.forecast.io/forecast/$FORECAST_IO_KEY/$latitude,$longitude,$current_time?exclude=minutely,hourly,daily,alerts,flags)
+forecast=$(curl --silent https://api.forecast.io/forecast/$FORECAST_IO_KEY/$latitude,$longitude,$current_time?exclude=minutely,hourly,daily,alerts,flags)
 icon=$(echo $forecast | cut -d ',' -f 7 | cut -d ':' -f 2 | sed s/\"//g)
 
 case "$icon" in
